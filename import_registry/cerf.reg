@@ -5,3 +5,43 @@ REGEDIT4
 ; Always applied — there is no CLI switch to skip this file.
 ; Contents belong to CERF infrastructure (e.g. NDIS miniport registration).
 ; Do NOT use for appearance/UX tweaks — custom.reg is for those.
+
+; ---------------------------------------------------------------
+; Neutralize baked-in NDIS miniport entries.
+; See wince5/cerf.reg for the full rationale. Per-profile key list
+; derived from grep '"Group"="NDIS"' on the sysgen *.reg files.
+; ---------------------------------------------------------------
+
+[-HKEY_LOCAL_MACHINE\Comm\NE2000]
+[-HKEY_LOCAL_MACHINE\Comm\NE20001]
+[-HKEY_LOCAL_MACHINE\Comm\VMini]
+[-HKEY_LOCAL_MACHINE\Comm\VMINI1]
+[-HKEY_LOCAL_MACHINE\Comm\RTL8139]
+[-HKEY_LOCAL_MACHINE\Comm\e100bex]
+[-HKEY_LOCAL_MACHINE\Comm\AsyncMac]
+[-HKEY_LOCAL_MACHINE\Comm\AsyncMac1]
+[-HKEY_LOCAL_MACHINE\Comm\PPTP]
+[-HKEY_LOCAL_MACHINE\Comm\PPTP1]
+[-HKEY_LOCAL_MACHINE\Comm\VEM]
+
+; ---------------------------------------------------------------
+; Protocol linkage: bind Tcpip / Tcpip6 to CERFMP1.
+; CE7 uses NDIS 6 auto-binding for native NDIS 6 protocols; the
+; entries below are harmless on CE7 and match the compat path for
+; any NDIS 5.1 consumer that might still walk this.
+; ---------------------------------------------------------------
+
+[HKEY_LOCAL_MACHINE\Comm\Tcpip\Linkage]
+"Bind"=multi_sz:"CERFMP1"
+
+[HKEY_LOCAL_MACHINE\Comm\Tcpip6\Linkage]
+"Bind"=multi_sz:"CERFMP1"
+
+; ---------------------------------------------------------------
+; CE7 tcpip.dll FlBindAdapter reads EnableIPv6 from the per-adapter
+; Parms\TcpIp subkey. Absent value defaults to enabled; the explicit
+; 1 here documents intent and prevents accidental disabling later.
+; ---------------------------------------------------------------
+
+[HKEY_LOCAL_MACHINE\Comm\CERFMP1\Parms\TcpIp]
+"EnableIPv6"=dword:00000001
