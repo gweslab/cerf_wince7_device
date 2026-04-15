@@ -6,5 +6,11 @@ REGEDIT4
 ; Entire proper and working CE registry is already imported in the 
 ; rest of sysgen'ed files. Those should NOT be modified at all.
 
+
+; CERF custom wallpaper
 [HKEY_CURRENT_USER\ControlPanel\Desktop]
 	"wallpaper"="\\Windows\\cerf.jpg"
+
+; Everyone likes status bars
+[HKEY_CURRENT_USER\software\microsoft\windows\currentversion\explorer\statusbar]
+	"ShowStatusBar"=dword:00000001
